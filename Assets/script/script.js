@@ -9,7 +9,7 @@ var historyTabEl = document.querySelector(".history-tabs")
 searchBtn.addEventListener("click", function (event) {
     event.preventDefault();
     getAPI(formEl.value);
-    formEl.value="";
+    formEl.value = "";
 })
 
 var searchHistory = JSON.parse(localStorage.getItem("city")) || [];
@@ -17,15 +17,15 @@ var searchHistory = JSON.parse(localStorage.getItem("city")) || [];
 
 function getLocation() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(showPosition);
+        navigator.geolocation.getCurrentPosition(showPosition);
     } else {
-      cityDisplayEl.innerHTML = "<p>Geolocation is not supported by this browser. Search for a city on the left</p>";
+        cityDisplayEl.innerHTML = "<p>Geolocation is not supported by this browser. Search for a city on the left</p>";
     }
-  }
-  
-  function showPosition(position) {
+}
 
-    fetch("http://api.openweathermap.org/geo/1.0/reverse?lat="+ position.coords.latitude+ "&lon=" + position.coords.longitude+"&limit=5&appid=" + apiKey)
+function showPosition(position) {
+
+    fetch("http://api.openweathermap.org/geo/1.0/reverse?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&limit=5&appid=" + apiKey)
 
         .then(function (response) {
             return response.json();
@@ -33,9 +33,7 @@ function getLocation() {
         .then(function (data) {
             getAPI(data[0].name)
         })
-  }
-
-
+}
 
 function renderHistory() {
     historyTabEl.innerHTML = '';
@@ -74,9 +72,6 @@ function getAPI(cityName) {
             cityName = (data[0].name)
 
             if (searchHistory.indexOf(cityName) == -1) {
-                // var tab = document.createElement("li");
-                // tab.innerHTML = "<button>" + cityName + "</button>";
-                // historyTabEl.append(tab);
                 searchHistory.push(cityName);
                 localStorage.setItem("city", JSON.stringify(searchHistory))
             };
@@ -100,15 +95,23 @@ function getAPI(cityName) {
     function displayToday(dataSet) {
         cityDisplayEl.innerHTML = "";
         city = document.createElement("div")
-        city.innerHTML = "<h1>" + cityName + "</h1>" + "<image src='https://openweathermap.org/img/w/" + dataSet.current.weather[0].icon + ".png'>" ;
+        city.innerHTML = "<h1>" + cityName + "</h1>" + "<image src='https://openweathermap.org/img/w/" + dataSet.current.weather[0].icon + ".png'>";
         temp = document.createElement("p")
         temp.textContent = "Temp: " + dataSet.current.temp;
         wind = document.createElement("p")
         wind.textContent = "Wind: " + dataSet.current.wind_speed + "MPH"
         humidity = document.createElement("p")
         humidity.textContent = "Humidity: " + dataSet.current.humidity
-        UVIndex = document.createElement("p")
-        UVIndex.textContent = "UV Index: " + dataSet.current.uvi
+        UVIndex = document.createElement("div")
+        UVIndex.setAttribute("style", "display: flex; flex-wrap: wrap")
+        UVIndex.innerHTML = "<p>UV Index: <p>"
+        UVIndexNum = document.createElement("p")
+        UVIndexNum.textContent = dataSet.current.uvi
+        UVIndex.append(UVIndexNum)
+        if (dataSet.current.uvi < 3) { UVIndexNum.setAttribute("style", "background-color: #558B2F;width: 30px") }
+        else if (3 <= dataSet.current.uvi < 6) { UVIndexNum.setAttribute("style", "background-color: #F9A825;width: 30px") }
+        else if (6 <= dataSet.current.uvi < 11) { UVIndexNum.setAttribute("style", "background-color: #B71C1C;width: 30px") }
+        else { UVIndexNum.setAttribute("style", "background-color: #6A1B9A;width: 30px") }
         cityDisplayEl.append(city, temp, wind, humidity, UVIndex)
 
     }
