@@ -14,6 +14,29 @@ searchBtn.addEventListener("click", function (event) {
 
 var searchHistory = JSON.parse(localStorage.getItem("city")) || [];
 
+
+function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      cityDisplayEl.innerHTML = "<p>Geolocation is not supported by this browser. Search for a city on the left</p>";
+    }
+  }
+  
+  function showPosition(position) {
+
+    fetch("http://api.openweathermap.org/geo/1.0/reverse?lat="+ position.coords.latitude+ "&lon=" + position.coords.longitude+"&limit=5&appid=" + apiKey)
+
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            getAPI(data[0].name)
+        })
+  }
+
+
+
 function renderHistory() {
     historyTabEl.innerHTML = '';
     var searchHistory = JSON.parse(localStorage.getItem("city")) || [];
@@ -26,6 +49,7 @@ function renderHistory() {
 }
 
 renderHistory();
+getLocation();
 
 historyTabEl.addEventListener("click", function (event) {
     event.preventDefault();
