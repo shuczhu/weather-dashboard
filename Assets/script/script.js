@@ -5,16 +5,16 @@ var searchBtn = document.getElementById("search-button");
 var cityDisplayEl = document.querySelector(".city-display");
 var forecastDisplayEl = document.querySelector(".forecast-item");
 var historyTabEl = document.querySelector(".history-tabs")
+var searchHistory = JSON.parse(localStorage.getItem("city")) || [];
 
+//search button functionality
 searchBtn.addEventListener("click", function (event) {
     event.preventDefault();
     getAPI(formEl.value);
     formEl.value = "";
 })
 
-var searchHistory = JSON.parse(localStorage.getItem("city")) || [];
-
-
+//getting user's geolocation to display on landing
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
@@ -24,7 +24,6 @@ function getLocation() {
 }
 
 function showPosition(position) {
-
     fetch("http://api.openweathermap.org/geo/1.0/reverse?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&limit=5&appid=" + apiKey)
 
         .then(function (response) {
@@ -35,6 +34,7 @@ function showPosition(position) {
         })
 }
 
+//load previously searched city in search history panel
 function renderHistory() {
     historyTabEl.innerHTML = '';
     var searchHistory = JSON.parse(localStorage.getItem("city")) || [];
@@ -49,15 +49,21 @@ function renderHistory() {
 renderHistory();
 getLocation();
 
+//create click function on each search history tab
 historyTabEl.addEventListener("click", function (event) {
     event.preventDefault();
     getAPI(event.target.textContent)
 })
 
+
+//main function to get API
 function getAPI(cityName) {
+    //clear out current and five day forecast display containers
     cityDisplayEl.innerHTML = ""
     cityDisplayEl.textContent = "Loading..."
     forecastDisplayEl.innerHTML = ""
+    
+    //fetch city longtitude and lattitude from city name entered
     fetch("https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=5&appid=63ace9a18e2df2f35573367277a78e65")
 
         .then(function (response) {
@@ -65,18 +71,20 @@ function getAPI(cityName) {
         })
 
         .then(function (data) {
-            console.log(data)
-            console.log(data[0].lat)
             var lat = (data[0].lat)
             var lon = (data[0].lon)
             cityName = (data[0].name)
 
+            //store searched city name in local storage, if it hasn't been added already, to avoid duplicate items.
             if (searchHistory.indexOf(cityName) == -1) {
                 searchHistory.push(cityName);
                 localStorage.setItem("city", JSON.stringify(searchHistory))
             };
 
+            //render history tab on left panel when new city is searched
             renderHistory();
+
+            //fetch weather data from lattitude and longtitude from previous API interaction  
             return fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&units=imperial&exclude=minutely,hourly&appid=" + apiKey)
         })
 
@@ -84,14 +92,16 @@ function getAPI(cityName) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data)
             displayToday(data)
             forecastDisplayEl.innerHTML = "";
+
+            //generate five day forecast display
             for (i = 0; i < 5; i++) { displayForecast(data, i) }
             return;
         })
 
 
+    //dynamically create display for current weather condition
     function displayToday(dataSet) {
         cityDisplayEl.innerHTML = "";
         city = document.createElement("div")
@@ -108,6 +118,8 @@ function getAPI(cityName) {
         UVIndexNum = document.createElement("p")
         UVIndexNum.textContent = dataSet.current.uvi
         UVIndex.append(UVIndexNum)
+
+        //UV Index color code 
         if (dataSet.current.uvi < 3) { UVIndexNum.setAttribute("style", "background-color: #558B2F;width: 30px") }
         else if (3 <= dataSet.current.uvi < 6) { UVIndexNum.setAttribute("style", "background-color: #F9A825;width: 30px") }
         else if (6 <= dataSet.current.uvi < 11) { UVIndexNum.setAttribute("style", "background-color: #B71C1C;width: 30px") }
@@ -116,6 +128,7 @@ function getAPI(cityName) {
 
     }
 
+    //dynamically create display for five day forecast 
     function displayForecast(dataSet, i) {
 
         date = document.createElement("p")
@@ -135,7 +148,6 @@ function getAPI(cityName) {
         card.classList.add("card")
         card.append(date, city, temp, wind, humidity, UVIndex)
         forecastDisplayEl.append(card);
-
     }
 }
 
