@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="./Assets/css/reset.css">
+    <link rel="stylesheet" href="./Assets/css/style.css">
+
+
+</head>
+
+<body>
+    <div class="hero">
+        <h1>Weather Dashboard</h1>
+    </div>
+
+    <div class="body-container">
+        <div class="left-panel">
+            <div class="search-panel">
+                <h2>Search for a City:</h2>
+                <form class="form">
+                    <input id="search-input" type="text" class="input" placeholder="  city" />
+                    <button id="search-button">Search</button>
+                </form>
+            </div>
+            
+            <div class="search-history">
+                <ul class = "history-tabs">
+                    <!-- <li><button>asdasd</button></li> -->
+                </ul></div>
+        </div>
+
+        <div class="right-panel">
+            <div class="city-display"></div>
+            <div class="forecast-display">
+                <h3>5 Day Forecast</h3>
+                <div class="forecast-item"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+    <script>dayjs().format()</script>
+    <script src="./Assets/script/script.js"></script>
+</body>
+
+</html>
