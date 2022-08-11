@@ -33,7 +33,9 @@ historyTabEl.addEventListener("click", function (event) {
 })
 
 function getAPI(cityName) {
-    // console.log(cityName)
+    cityDisplayEl.innerHTML = ""
+    cityDisplayEl.textContent = "Loading..."
+    forecastDisplayEl.innerHTML = ""
     fetch("https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=5&appid=63ace9a18e2df2f35573367277a78e65")
 
         .then(function (response) {
@@ -54,6 +56,7 @@ function getAPI(cityName) {
                 searchHistory.push(cityName);
                 localStorage.setItem("city", JSON.stringify(searchHistory))
             };
+
             renderHistory();
             return fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&units=imperial&exclude=minutely,hourly&appid=" + apiKey)
         })
@@ -91,7 +94,7 @@ function getAPI(cityName) {
         date = document.createElement("p")
         date.textContent = dayjs().add(i, "day").format("MM/DD/YYYY")
         city = document.createElement("div")
-        city.innerHTML = "<h1>" + cityName + "</h1>" + "<image src='https://openweathermap.org/img/w/" + dataSet.daily[i].weather[0].icon + ".png'>";
+        city.innerHTML = "<image src='https://openweathermap.org/img/w/" + dataSet.daily[i].weather[0].icon + ".png'>";
         temp = document.createElement("p")
         temp.textContent = "Temp: " + dataSet.daily[i].temp.day;
         wind = document.createElement("p")

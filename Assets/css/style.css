@@ -19,11 +19,11 @@
     width:100%;
     display: flex;
     flex-wrap: wrap;
-    height: 800px;
+    /* height: 800px; */
 }
 
 .left-panel {
-    width:30%;
+    width:25%;
     padding-left: 20px;
 }
 
@@ -66,14 +66,9 @@ button:hover {
     background-color:navy;
 }
 
-/* .display-button {
-    width:100%;
-    height:40px;
-    margin-bottom: 10px;
-} */
 
 .right-panel {
-    width: 65%;
+    width: 75%;
     padding-left:30px;
 
 }
@@ -83,6 +78,11 @@ button:hover {
     border: 2px solid black; 
     padding: 20px;
     margin-top: 30px;
+    line-height:1.6;
+}
+
+.city-display h1{
+    font-size: 30px;
 }
 
 li button {
@@ -92,17 +92,16 @@ li button {
     background-image: linear-gradient(to right, navy, aqua);
     color:aliceblue;
 }
-.card {
-    background-color: navy;
-    color: white;
-    padding: 5%;
-    margin: 20px;
-}
 
 .forecast-item {
     display: flex;
     flex-wrap: wrap;
 }
+
+.forecast-item p:first-child{
+    font-size: 30px;
+}
+
 .forecast-display {
     margin-top: 30px;
 }
@@ -110,3 +109,28 @@ li button {
 .forecast-display h3 {
     font-size: 30px;
 }
+
+.card {
+    background-color: navy;
+    color: white;
+    padding: 10px;
+    margin: 20px;
+    line-height: 1.6;
+    width: 200px;
+    min-width: 200px;
+}
+
+
+@media only screen and (max-width: 600px) {
+
+.left-panel {
+    width: 100%;
+}
+
+.right-panel {
+    width: 100%;
+    
+}
+
+
+  }
